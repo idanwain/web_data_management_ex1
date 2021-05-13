@@ -22,11 +22,11 @@ patterns = [
 ]
 
 relations = {
-    'who directed ([^\s].*[^\s])\?': 'directed',
-    'who produced ([^\s].*[^\s])\?': 'produced',
+    'who directed ([^\s].*[^\s])\?': 'directed by',
+    'who produced ([^\s].*[^\s])\?': 'produced by',
     'is ([^\s].*[^\s]) based on a book\?': 'based on',
-    'when was ([^\s].*[^\s]) released\?': 'released',
-    'how long is ([^\s].*[^\s])\?': None,
+    'when was ([^\s].*[^\s]) released\?': 'release date',
+    'how long is ([^\s].*[^\s])\?': 'running time',
     'who starred in ([^\s].*[^\s])\?': 'starred in',
     'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': 'star in',
     'when was ([^\s].*[^\s]) born\?': 'born',
@@ -44,6 +44,7 @@ pattern_type_mapping = {
     "what": "string",
     "did": "boolean"
 }
+
 
 def get_matching_pattern(query):
     for pattern in patterns:
@@ -69,7 +70,11 @@ def extract_return_type(pattern):
     return ret_type
 
 
-def build_sparql_query(entities, relations, ret_type):
+def build_sparql_query(entities, relations):
+    pass
+
+
+def get_answer(q, ret_type):
     pass
 
 
@@ -78,12 +83,11 @@ def execute(query: str):
     if not matching_pattern:
         print('please enter a valid query.')
         sys.exit(0)
-    #  --------- ADD ENTITIES EXTRACTION HERE ----------
+
     entities = extract_entities(matching_pattern, query)
     relations = extract_relations(matching_pattern)
     ret_type = extract_return_type(matching_pattern)
-    sparql_query = build_sparql_query(entities, relations, ret_type)
-    x = g.query(sparql_query)
-    print(list(x))
-
-    return None
+    sparql_query = build_sparql_query(entities, relations)
+    q = g.query(sparql_query)
+    answer = get_answer(q, ret_type)
+    print(answer)

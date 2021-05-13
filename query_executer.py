@@ -17,6 +17,10 @@ patterns = [
 ]
 
 
+def get_matching_pattern(query):
+    pass
+
+
 def execute(query):
     matching_pattern = get_matching_pattern(query)
     if not matching_pattern:

@@ -1,5 +1,10 @@
 import re
 import sys
+import rdflib
+
+# Ontology Graph
+g = rdflib.Graph()
+g.parse("graph.nt", format="nt")
 
 patterns = [
     'who directed [^\s].*[^\s]\?',
@@ -18,12 +23,25 @@ patterns = [
 
 
 def get_matching_pattern(query):
+    for pattern in patterns:
+        if re.match(pattern, query):
+            return pattern
+    return None
+
+
+def extract_relation(pattern):
     pass
 
 
-def execute(query):
-    matching_pattern = get_matching_pattern(query)
+def execute(query: str):
+    matching_pattern = get_matching_pattern(query.lower())
     if not matching_pattern:
         print('please enter a valid query.')
         sys.exit(0)
+    #  --------- ADD ENTITIES EXTRACTION HERE ----------
+    relations = extract_relation(matching_pattern)
+    sparql_query = build_sparql_query()
+    x1 = g.query(sparql_query)
+    print(list(x1))
+
     return None

@@ -21,6 +21,14 @@ patterns = [
     'how many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?',
 ]
 
+pattern_type_mapping = {
+    "who": "string",
+    "is": "boolean",
+    "when": "date",
+    "how": "int",
+    "what": "string",
+    "did": "boolean"
+}
 
 def get_matching_pattern(query):
     for pattern in patterns:
@@ -41,16 +49,10 @@ def extract_entities(pattern, query):
 
 
 def extract_return_type(pattern):
-    translation = {
-        "who":"string",
-        "is":"boolean",
-        "when":"date",
-        "how":"int",
-        "what":"string"
-    }
     res = pattern.split(" ")
-    ret_type = translation[res[0]]
+    ret_type = pattern_type_mapping[res[0]]
     return ret_type
+
 
 def build_sparql_query(entities, relations, ret_type):
     pass

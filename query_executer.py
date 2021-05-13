@@ -7,18 +7,18 @@ g = rdflib.Graph()
 g.parse("graph.nt", format="nt")
 
 patterns = [
-    'who directed [^\s].*[^\s]\?',
-    'who produced [^\s].*[^\s]\?',
-    'is [^\s].*[^\s] based on a book\?',
-    'when was [^\s].*[^\s] released\?',
-    'how long is [^\s].*[^\s]\?',
-    'who starred in [^\s].*[^\s]\?',
-    'did [^\s].*[^\s] star in [^\s].*[^\s]\?',
-    'when was [^\s].*[^\s] born\?',
-    'what is the occupation of [^\s].*[^\s]\?',
+    'who directed ([^\s].*[^\s])\?',
+    'who produced ([^\s].*[^\s])\?',
+    'is ([^\s].*[^\s]) based on a book\?',
+    'when was ([^\s].*[^\s]) released\?',
+    'how long is ([^\s].*[^\s])\?',
+    'who starred in ([^\s].*[^\s])\?',
+    'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?',
+    'when was ([^\s].*[^\s]) born\?',
+    'what is the occupation of ([^\s].*[^\s])\?',
     'how many films are based on books\?',
-    'how many films starring [^\s].*[^\s] won an academy award\?',
-    'how many [^\s].*[^\s] are also [^\s].*[^\s]\?',
+    'how many films starring ([^\s].*[^\s]) won an academy award\?',
+    'how many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?',
 ]
 
 
@@ -32,6 +32,12 @@ def get_matching_pattern(query):
 def extract_relation(pattern):
     pass
 
+
+def get_entities_from_query(pattern,query):
+    p = re.compile(pattern)
+    res = p.findall(query)
+    lst = list(res[0])
+    return lst
 
 def execute(query: str):
     matching_pattern = get_matching_pattern(query.lower())

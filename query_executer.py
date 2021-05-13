@@ -41,8 +41,16 @@ def extract_entities(pattern, query):
 
 
 def extract_return_type(pattern):
-    pass
-
+    translation = {
+        "who":"string",
+        "is":"boolean",
+        "when":"date",
+        "how":"int",
+        "what":"string"
+    }
+    res = pattern.split(" ")
+    ret_type = translation[res[0]]
+    return ret_type
 
 def build_sparql_query(entities, relations, ret_type):
     pass

@@ -29,15 +29,24 @@ def get_matching_pattern(query):
     return None
 
 
-def extract_relation(pattern):
+def extract_relations(pattern):
     pass
 
 
-def get_entities_from_query(pattern,query):
+def extract_entities(pattern, query):
     p = re.compile(pattern)
     res = p.findall(query)
     lst = list(res[0])
     return lst
+
+
+def extract_return_type(pattern):
+    pass
+
+
+def build_sparql_query(entities, relations, ret_type):
+    pass
+
 
 def execute(query: str):
     matching_pattern = get_matching_pattern(query.lower())
@@ -45,8 +54,10 @@ def execute(query: str):
         print('please enter a valid query.')
         sys.exit(0)
     #  --------- ADD ENTITIES EXTRACTION HERE ----------
-    relations = extract_relation(matching_pattern)
-    sparql_query = build_sparql_query()
+    entities = extract_entities(matching_pattern, query)
+    relations = extract_relations(matching_pattern)
+    ret_type = extract_return_type(matching_pattern)
+    sparql_query = build_sparql_query(entities, relations, ret_type)
     x1 = g.query(sparql_query)
     print(list(x1))
 

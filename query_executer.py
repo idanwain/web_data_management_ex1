@@ -6,6 +6,45 @@ import rdflib
 g = rdflib.Graph()
 g.parse("ontology.nt", format="nt")
 
+queries = {
+    'who directed ([^\s].*[^\s])\?': f'select ?x where {{'
+                                     f'{entity1} {relation1} ?x .'
+                                     f'}}',
+    'who produced ([^\s].*[^\s])\?': f'select ?x where {{'
+                                     f'{entity1} {relation1} ?x .'
+                                     f'}}',
+    'is ([^\s].*[^\s]) based on a book\?': f'select ?x where {{'
+                                           f'{entity1} {relation1} ?x .'
+                                           f'}}',
+    'when was ([^\s].*[^\s]) released\?': f'select ?x where {{'
+                                          f'{entity1} {relation1} ?x .'
+                                          f'}}',
+    'how long is ([^\s].*[^\s])\?': f'select ?x where {{'
+                                    f'{entity1} {relation1} ?x .'
+                                    f'}}',
+    'who starred in ([^\s].*[^\s])\?': f'select ?x where {{'
+                                           f'{entity1} {relation1} ?x .'
+                                           f'}}',
+    'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': f'ask where {{'
+                                                   f'{entity1} {relation1} {entity2} .'
+                                                   f'}}',
+    'when was ([^\s].*[^\s]) born\?': f'select ?x where {{'
+                                      f'{entity1} {relation1} ?x .'
+                                      f'}}',
+    'what is the occupation of ([^\s].*[^\s])\?': f'select ?x where {{'
+                                                  f'{entity1} {relation1} ?x .'
+                                                   f'}}',
+    'how many films are based on books\?': f'select distinct * where {{'
+                                           f'?film {relation1} ?book .'
+                                           f'}}',
+    'how many films starring ([^\s].*[^\s]) won an academy award\?': f'select ?x where {{'
+                                                                     f'?x {relation1} {entity1}',
+    'how many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': f'select distinct * where {{'
+                                                         f' ?x a {relation1} .'
+                                                         f' ?x a {relation2} .'
+                                                         f'}}'
+}
+
 patterns = [
     'who directed ([^\s].*[^\s])\?',
     'who produced ([^\s].*[^\s])\?',
@@ -22,16 +61,16 @@ patterns = [
 ]
 
 relations = {
-    'who directed ([^\s].*[^\s])\?': 'directed by',
-    'who produced ([^\s].*[^\s])\?': 'produced by',
-    'is ([^\s].*[^\s]) based on a book\?': 'based on',
-    'when was ([^\s].*[^\s]) released\?': 'release date',
-    'how long is ([^\s].*[^\s])\?': 'running time',
-    'who starred in ([^\s].*[^\s])\?': 'starred in',
-    'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': 'star in',
+    'who directed ([^\s].*[^\s])\?': 'directed_by',
+    'who produced ([^\s].*[^\s])\?': 'produced_by',
+    'is ([^\s].*[^\s]) based on a book\?': 'based_on',
+    'when was ([^\s].*[^\s]) released\?': 'release_date',
+    'how long is ([^\s].*[^\s])\?': 'running_time',
+    'who starred in ([^\s].*[^\s])\?': 'starring',
+    'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': 'starring',
     'when was ([^\s].*[^\s]) born\?': 'born',
     'what is the occupation of ([^\s].*[^\s])\?': 'occupation',
-    'how many films are based on books\?': 'based on',
+    'how many films are based on books\?': 'based_on',
     'how many films starring ([^\s].*[^\s]) won an academy award\?': 'starring',
     'how many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'entities'
 }
@@ -70,12 +109,20 @@ def extract_return_type(pattern):
     return ret_type
 
 
-def build_sparql_query(entities, relations):
-    pass
+def build_sparql_query(pattern, entities, relations, ret_type):
+    q = "ask" if ret_type == "boolean" else "select"
+    if not ret_type == "boolean":
+        q += " ?x"
+
 
 
 def get_answer(q, ret_type):
-    pass
+    res = list(q)
+    if ret_type == "boolean":
+        res = 'Yes' if res[0] else 'No'
+    elif ret_type == "int":
+        res = len(res)
+    return res
 
 
 def execute(query: str):
@@ -87,7 +134,7 @@ def execute(query: str):
     entities = extract_entities(matching_pattern, query)
     relations = extract_relations(matching_pattern)
     ret_type = extract_return_type(matching_pattern)
-    sparql_query = build_sparql_query(entities, relations)
+    sparql_query = build_sparql_query(matching_pattern, entities, relations, ret_type)
     q = g.query(sparql_query)
     answer = get_answer(q, ret_type)
     print(answer)

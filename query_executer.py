@@ -109,13 +109,34 @@ def extract_return_type(pattern):
     return ret_type
 
 
-def build_sparql_query(pattern, entities, relations, ret_type):
-    q = "ask" if ret_type == "boolean" else "select"
-    if not ret_type == "boolean":
-        q += " ?x"
+def replace_spaces(entity1):
+    return entity1.replace(" ", "_")
 
 
+def build_sparql_query(pattern, entities, relations):
+    if relations == 'entities':
+        relations = entities
+    entity1 = ''
+    entity2 = ''
+    relation1 = ''
+    relation2 = ''
+    if len(entities) > 0:
+        entity1 = entities[0]
+    if len(entities) > 1:
+        entity2 = entities[1]
+    if len(relations) > 0:
+        relation1 = relations[0]
+    if len(relations) > 1:
+        relation2 = relations[1]
+    entity1 = replace_spaces(entity1)
+    entity2 = replace_spaces(entity2)
+    relation1 = replace_spaces(relation1)
+    relation2 = replace_spaces(relation2)
 
+    return queries[pattern].format(entity1=entity1, entity2=entity2, relation1=relation1, relation2=relation2)
+
+
+# TODO: Check for return value from query after building ontology
 def get_answer(q, ret_type):
     res = list(q)
     if ret_type == "boolean":
@@ -134,7 +155,7 @@ def execute(query: str):
     entities = extract_entities(matching_pattern, query)
     relations = extract_relations(matching_pattern)
     ret_type = extract_return_type(matching_pattern)
-    sparql_query = build_sparql_query(matching_pattern, entities, relations, ret_type)
+    sparql_query = build_sparql_query(matching_pattern, entities, relations)
     q = g.query(sparql_query)
     answer = get_answer(q, ret_type)
     print(answer)

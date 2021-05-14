@@ -7,42 +7,43 @@ g = rdflib.Graph()
 g.parse("ontology.nt", format="nt")
 
 queries = {
-    'who directed ([^\s].*[^\s])\?': f'select ?x where {{'
-                                     f'{entity1} {relation1} ?x .'
-                                     f'}}',
-    'who produced ([^\s].*[^\s])\?': f'select ?x where {{'
-                                     f'{entity1} {relation1} ?x .'
-                                     f'}}',
-    'is ([^\s].*[^\s]) based on a book\?': f'select ?x where {{'
-                                           f'{entity1} {relation1} ?x .'
-                                           f'}}',
-    'when was ([^\s].*[^\s]) released\?': f'select ?x where {{'
-                                          f'{entity1} {relation1} ?x .'
-                                          f'}}',
-    'how long is ([^\s].*[^\s])\?': f'select ?x where {{'
-                                    f'{entity1} {relation1} ?x .'
-                                    f'}}',
-    'who starred in ([^\s].*[^\s])\?': f'select ?x where {{'
-                                           f'{entity1} {relation1} ?x .'
-                                           f'}}',
-    'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': f'ask where {{'
-                                                   f'{entity1} {relation1} {entity2} .'
-                                                   f'}}',
-    'when was ([^\s].*[^\s]) born\?': f'select ?x where {{'
-                                      f'{entity1} {relation1} ?x .'
-                                      f'}}',
-    'what is the occupation of ([^\s].*[^\s])\?': f'select ?x where {{'
-                                                  f'{entity1} {relation1} ?x .'
-                                                   f'}}',
-    'how many films are based on books\?': f'select distinct * where {{'
-                                           f'?film {relation1} ?book .'
-                                           f'}}',
-    'how many films starring ([^\s].*[^\s]) won an academy award\?': f'select ?x where {{'
-                                                                     f'?x {relation1} {entity1}',
-    'how many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': f'select distinct * where {{'
-                                                         f' ?x a {relation1} .'
-                                                         f' ?x a {relation2} .'
-                                                         f'}}'
+    'who directed ([^\s].*[^\s])\?': 'select ?x where {{'
+                                     '{entity1} {relation1} ?x .'
+                                     '}}',
+    'who produced ([^\s].*[^\s])\?': 'select ?x where {{'
+                                     '{entity1} {relation1} ?x .'
+                                     '}}',
+    'is ([^\s].*[^\s]) based on a book\?': 'select ?x where {{'
+                                           '{entity1} {relation1} ?x .'
+                                           '}}',
+    'when was ([^\s].*[^\s]) released\?': 'select ?x where {{'
+                                          '{entity1} {relation1} ?x .'
+                                          '}}',
+    'how long is ([^\s].*[^\s])\?': 'select ?x where {{'
+                                    '{entity1} {relation1} ?x .'
+                                    '}}',
+    'who starred in ([^\s].*[^\s])\?': 'select ?x where {{'
+                                        '{entity1} {relation1} ?x .'
+                                        '}}',
+    'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': 'ask where {{'
+                                                   '{entity1} {relation1} {entity2} .'
+                                                   '}}',
+    'when was ([^\s].*[^\s]) born\?': 'select ?x where {{'
+                                      '{entity1} {relation1} ?x .'
+                                      '}}',
+    'what is the occupation of ([^\s].*[^\s])\?': 'select ?x where {{'
+                                                  '{entity1} {relation1} ?x .'
+                                                   '}}',
+    'how many films are based on books\?': 'select distinct * where {{'
+                                           '?film {relation1} ?book .'
+                                           '}}',
+    'how many films starring ([^\s].*[^\s]) won an academy award\?': 'select ?x where {{'
+                                                                     '?x {relation1} {entity1} .'
+                                                                     '}}',
+    'how many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'select distinct * where {{'
+                                                         ' ?x a {relation1} .'
+                                                         ' ?x a {relation2} .'
+                                                         '}}'
 }
 
 patterns = [

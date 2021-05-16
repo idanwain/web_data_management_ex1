@@ -1,6 +1,6 @@
 import requests
 import lxml.html
-
+import datetime
 base_url = "https://en.wikipedia.org"
 
 def create():
@@ -27,11 +27,21 @@ def get_info_from_infobox(movie_url):
         relations[label] = [a for a in parent.getchildren()[1].itertext() if a != '\n' and '[' not in a]
     return relations
 
+def format_date(release_date):
+    dates = []
+    for date in release_date:
+        try:
+            datetime.datetime.strptime(date, "%Y-%m-%d")
+            dates.append(date)
+        except ValueError:
+            pass
+    return dates
+
 
 def main():
     movies_urls = get_movies_url()
-    for url in movies_urls:
-        print(get_info_from_infobox(url))
+    data = get_info_from_infobox(movies_urls[0])
+    format_date(data['Release date'])
 
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import lxml.html
 import datetime
 import rdflib
 import lxml.html.clean
+import json
 
 wiki_url = "https://en.wikipedia.org"
 example_url = "http://example.org"
@@ -23,13 +24,12 @@ def create():
         contributors_data = get_contributors_info(movie_data)
         insert_to_ontology(movie_name, movie_data)
         for contributor in contributors_data:
-            print("Contributor: %s" %contributor)
+            print("Contributor: %s" % contributor)
             insert_to_ontology(contributor, contributors_data[contributor])
     g.serialize('ontology.nt', format='nt')
 
 
 def insert_to_ontology(entity, data):
-
     ont_entity = rdflib.URIRef(example_url + '/' + entity)
     for relation in data:
         ont_relation = relation.replace('\xa0', '_')
@@ -59,7 +59,8 @@ def get_info_from_infobox(movie_url):
     res = requests.get(movie_url + suffix)
     doc = lxml.html.fromstring(res.content)
     relations = dict()
-    for t in doc.xpath("//table[contains(@class,'infobox')]//tr[position()>1]//*[contains(@class,'infobox-label')]"):
+    for t in doc.xpath(
+            "//table[contains(@class,'infobox')]//tr[position()>1]//*[contains(@class,'infobox-label')]"):  # Need to repair this, check https://en.wikipedia.org/wiki/Michael_Potts_(actor)
         label = ' '.join(t.itertext()).strip(' ')
         label = label.replace(' ', '_')
         parent = t.getparent()
@@ -81,16 +82,23 @@ def format_date(release_date):
 
 
 def get_contributors_info(data: dict):
-    producers = data['Produced_by']
-    directors = data['Directed_by']
-    actors = data['Starring']
+    producers, directors, actors = [], [], []
+    if 'Produced_by' in data.keys():
+        producers = data['Produced_by']
+    if 'Directed_by' in data.keys():
+        producers = data['Directed_by']
+    if 'Starring' in data.keys():
+        producers = data['Starring']
     res = dict()
     for people in set(producers + directors + actors):
         people = people.replace(' ', '_')
         info = get_info_from_infobox(wiki_url + '/wiki/' + people)
         if len(info) > 0:
-            info['Born'] = format_date(info['Born'])
-            res[people] = info
+            try:
+                info['Born'] = format_date(info['Born'])
+                res[people] = info
+            except KeyError:
+                print(people + " has no 'born' field, skipping.")
     return res
 
 

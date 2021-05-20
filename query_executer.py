@@ -5,84 +5,86 @@ import rdflib
 # Ontology Graph
 g = rdflib.Graph()
 g.parse("ontology.nt", format="nt")
+example_url = "<http://example.org/"
+
 
 queries = {
-    'who directed ([^\s].*[^\s])\?': 'select ?x where {{'
+    'Who directed ([^\s].*[^\s])\?': 'select ?x where {{'
                                      '{entity1} {relation1} ?x .'
                                      '}}',
-    'who produced ([^\s].*[^\s])\?': 'select ?x where {{'
+    'Who produced ([^\s].*[^\s])\?': 'select ?x where {{'
                                      '{entity1} {relation1} ?x .'
                                      '}}',
-    'is ([^\s].*[^\s]) based on a book\?': 'select ?x where {{'
+    'Is ([^\s].*[^\s]) based on a book\?': 'select ?x where {{'
                                            '{entity1} {relation1} ?x .'
                                            '}}',
-    'when was ([^\s].*[^\s]) released\?': 'select ?x where {{'
+    'When was ([^\s].*[^\s]) released\?': 'select ?x where {{'
                                           '{entity1} {relation1} ?x .'
                                           '}}',
-    'how long is ([^\s].*[^\s])\?': 'select ?x where {{'
+    'How long is ([^\s].*[^\s])\?': 'select ?x where {{'
                                     '{entity1} {relation1} ?x .'
                                     '}}',
-    'who starred in ([^\s].*[^\s])\?': 'select ?x where {{'
+    'Who starred in ([^\s].*[^\s])\?': 'select ?x where {{'
                                         '{entity1} {relation1} ?x .'
                                         '}}',
-    'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': 'ask where {{'
-                                                   '{entity1} {relation1} {entity2} .'
+    'Did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': 'ask where {{'
+                                                   '{entity2} {relation1} {entity1} .'
                                                    '}}',
-    'when was ([^\s].*[^\s]) born\?': 'select ?x where {{'
+    'When was ([^\s].*[^\s]) born\?': 'select ?x where {{'
                                       '{entity1} {relation1} ?x .'
                                       '}}',
-    'what is the occupation of ([^\s].*[^\s])\?': 'select ?x where {{'
+    'What is the occupation of ([^\s].*[^\s])\?': 'select ?x where {{'
                                                   '{entity1} {relation1} ?x .'
                                                    '}}',
-    'how many films are based on books\?': 'select distinct * where {{'
+    'How many films are based on books\?': 'select distinct * where {{'
                                            '?film {relation1} ?book .'
                                            '}}',
-    'how many films starring ([^\s].*[^\s]) won an academy award\?': 'select ?x where {{'
+    'How many films starring ([^\s].*[^\s]) won an academy award\?': 'select ?x where {{'
                                                                      '?x {relation1} {entity1} .'
                                                                      '}}',
-    'how many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'select distinct * where {{'
+    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'select distinct * where {{'
                                                          ' ?x a {relation1} .'
                                                          ' ?x a {relation2} .'
                                                          '}}'
 }
 
 patterns = [
-    'who directed ([^\s].*[^\s])\?',
-    'who produced ([^\s].*[^\s])\?',
-    'is ([^\s].*[^\s]) based on a book\?',
-    'when was ([^\s].*[^\s]) released\?',
-    'how long is ([^\s].*[^\s])\?',
-    'who starred in ([^\s].*[^\s])\?',
-    'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?',
-    'when was ([^\s].*[^\s]) born\?',
-    'what is the occupation of ([^\s].*[^\s])\?',
-    'how many films are based on books\?',
-    'how many films starring ([^\s].*[^\s]) won an academy award\?',
-    'how many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?'
+    'Who directed ([^\s].*[^\s])\?',
+    'Who produced ([^\s].*[^\s])\?',
+    'Is ([^\s].*[^\s]) based on a book\?',
+    'When was ([^\s].*[^\s]) released\?',
+    'How long is ([^\s].*[^\s])\?',
+    'Who starred in ([^\s].*[^\s])\?',
+    'Did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?',
+    'When was ([^\s].*[^\s]) born\?',
+    'What is the occupation of ([^\s].*[^\s])\?',
+    'How many films are based on books\?',
+    'How many films starring ([^\s].*[^\s]) won an academy award\?',
+    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?'
 ]
 
 relations = {
-    'who directed ([^\s].*[^\s])\?': 'directed_by',
-    'who produced ([^\s].*[^\s])\?': 'produced_by',
-    'is ([^\s].*[^\s]) based on a book\?': 'based_on',
-    'when was ([^\s].*[^\s]) released\?': 'release_date',
-    'how long is ([^\s].*[^\s])\?': 'running_time',
-    'who starred in ([^\s].*[^\s])\?': 'starring',
-    'did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': 'starring',
-    'when was ([^\s].*[^\s]) born\?': 'born',
-    'what is the occupation of ([^\s].*[^\s])\?': 'occupation',
-    'how many films are based on books\?': 'based_on',
-    'how many films starring ([^\s].*[^\s]) won an academy award\?': 'starring',
-    'how many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'entities'
+    'Who directed ([^\s].*[^\s])\?': 'Directed_by',
+    'Who produced ([^\s].*[^\s])\?': 'Produced_by',
+    'Is ([^\s].*[^\s]) based on a book\?': 'Based_on',
+    'When was ([^\s].*[^\s]) released\?': 'Release_date',
+    'How long is ([^\s].*[^\s])\?': 'Running_time',
+    'Who starred in ([^\s].*[^\s])\?': 'Starring',
+    'Did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': 'Starring',
+    'When was ([^\s].*[^\s]) born\?': 'Born',
+    'What is the occupation of ([^\s].*[^\s])\?': 'Occupation',
+    'How many films are based on books\?': 'Based_on',
+    'How many films starring ([^\s].*[^\s]) won an academy award\?': 'Starring',
+    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'Entities'
 }
 
 pattern_type_mapping = {
-    "who": "string",
-    "is": "boolean",
-    "when": "date",
-    "how": "int",
-    "what": "string",
-    "did": "boolean"
+    "Who": "string",
+    "Is": "boolean",
+    "When": "date",
+    "How": "int",
+    "What": "string",
+    "Did": "boolean"
 }
 
 
@@ -94,19 +96,22 @@ def get_matching_pattern(query):
 
 
 def extract_relations(pattern):
-    return relations[pattern]
+    return [relations[pattern]]
 
 
 def extract_entities(pattern, query):
     p = re.compile(pattern)
     res = p.findall(query)
-    lst = list(res[0])
-    return lst
+    if type(res[0]) == tuple:
+        return res[0]
+    return res
 
 
 def extract_return_type(pattern):
     res = pattern.split(" ")
     ret_type = pattern_type_mapping[res[0]]
+    if ret_type == 'int' and res[1] == 'long':
+        ret_type = 'string'
     return ret_type
 
 
@@ -134,25 +139,24 @@ def build_sparql_query(pattern, entities, relations):
     relation1 = replace_spaces(relation1)
     relation2 = replace_spaces(relation2)
 
-    return queries[pattern].format(entity1=entity1, entity2=entity2, relation1=relation1, relation2=relation2)
+    return queries[pattern].format(entity1=example_url + entity1 + ">", entity2=example_url + entity2 + ">", relation1=example_url + relation1 + ">", relation2=example_url + relation2 + ">")
 
 
 # TODO: Check for return value from query after building ontology
 def get_answer(q, ret_type):
     res = list(q)
     if ret_type == "boolean":
-        res = 'Yes' if res[0] else 'No'
+        res = 'Yes' if len(res) > 0 and res[0] else 'No'
     elif ret_type == "int":
         res = len(res)
     return res
 
 
 def execute(query: str):
-    matching_pattern = get_matching_pattern(query.lower())
+    matching_pattern = get_matching_pattern(query)
     if not matching_pattern:
         print('please enter a valid query.')
         sys.exit(0)
-
     entities = extract_entities(matching_pattern, query)
     relations = extract_relations(matching_pattern)
     ret_type = extract_return_type(matching_pattern)
@@ -160,3 +164,20 @@ def execute(query: str):
     q = g.query(sparql_query)
     answer = get_answer(q, ret_type)
     print(answer)
+
+
+# execute("did Leonardo star in Titanic?")
+# execute("when was Nicolas Cage born?")
+# execute("Who directed Bao (film)?")
+# execute("Who produced 12 Years a Slave (film)?")
+# execute("Is The Jungle Book (2016 film) based on a book?")
+# execute("When was The Great Gatsby (2013 film) released?")
+# execute("How long is Coco (2017 film)?")
+# execute("Who starred in The Shape of Water?")
+# execute("Did Octavia Spencer star in The Shape of Water?")
+# execute("When was Chadwick Boseman born?")
+# execute("What is the occupation of Emma Watson?")
+# execute("How many films starring Meryl Streep won an academy award?")
+# execute("Who produced Brave (2012 film)?")
+execute("Is Brave (2012 film) based on a book?")
+

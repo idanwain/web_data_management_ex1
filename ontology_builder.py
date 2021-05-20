@@ -2,6 +2,7 @@ import requests
 import lxml.html
 import datetime
 import rdflib
+import rdflib.term
 import lxml.html.clean
 import json
 
@@ -30,13 +31,28 @@ def create():
 
 
 def insert_to_ontology(entity, data):
+    entity = entity.strip()
+    entity = entity.replace('"', "%" + format(hex(ord('"'))))
+    entity = entity.replace('{', "%" + format(hex(ord('{'))))
+    entity = entity.replace('}', "%" + format(hex(ord('}'))))
+    entity = entity.replace('\\', "%" + format(hex(ord('\\'))))
     ont_entity = rdflib.URIRef(example_url + '/' + entity)
     for relation in data:
+        relation = relation.strip()
         ont_relation = relation.replace('\xa0', '_')
+        ont_relation = ont_relation.replace('"', "%" + format(hex(ord('"'))))
+        ont_relation = ont_relation.replace('{', "%" + format(hex(ord('{'))))
+        ont_relation = ont_relation.replace('}', "%" + format(hex(ord('}'))))
+        ont_relation = ont_relation.replace('\\', "%" + format(hex(ord('\\'))))
         ont_relation = rdflib.URIRef(example_url + '/' + ont_relation)
         for value in data[relation]:
+            value = value.strip()
             value = value.replace('\xa0', '_')
             value = value.replace(' ', '_')
+            value = value.replace('"', "%" + format(hex(ord('"'))))
+            value = value.replace('{', "%" + format(hex(ord('{'))))
+            value = value.replace('}', "%" + format(hex(ord('}'))))
+            value = value.replace('\\', "%" + format(hex(ord('\\'))))
             ont_value = rdflib.URIRef(example_url + '/' + value)
             g.add((ont_entity, ont_relation, ont_value))
 
@@ -86,9 +102,9 @@ def get_contributors_info(data: dict):
     if 'Produced_by' in data.keys():
         producers = data['Produced_by']
     if 'Directed_by' in data.keys():
-        producers = data['Directed_by']
+        directors = data['Directed_by']
     if 'Starring' in data.keys():
-        producers = data['Starring']
+        actors = data['Starring']
     res = dict()
     for people in set(producers + directors + actors):
         people = people.replace(' ', '_')

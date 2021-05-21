@@ -108,10 +108,7 @@ def format_date(release_date,key=None):
         p = re.compile("[0-9]{4}")
         for data in release_date:
             if len(p.findall(data)) > 0:
-                return p.findall(data)[0]
-    if(len(dates) == 0):
-        print(key)
-        print(release_date)
+                return [p.findall(data)[0]]
     return dates
 
 

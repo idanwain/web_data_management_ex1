@@ -35,15 +35,15 @@ queries = {
     'What is the occupation of ([^\s].*[^\s])\?': 'select ?x where {{'
                                                   '{entity1} {relation1} ?x .'
                                                   '}}',
-    'How many films are based on books\?': 'select distinct * where {{'
+    'How many films are based on books\?': 'select distinct ?film where {{'
                                            '?film {relation1} ?book .'
                                            '}}',
     'How many films starring ([^\s].*[^\s]) won an academy award\?': 'select ?x where {{'
                                                                      '?x {relation1} {entity1} .'
                                                                      '}}',
-    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'select distinct * where {{'
-                                                         ' ?x a {relation1} .'
-                                                         ' ?x a {relation2} .'
+    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'select distinct ?x where {{'
+                                                         ' ?x <http://example.org/Occupation> {relation1} .'
+                                                         ' ?x <http://example.org/Occupation> {relation2} .'
                                                          '}}'
 }
 
@@ -119,7 +119,7 @@ def replace_spaces(entity1):
 
 
 def build_sparql_query(pattern, entities, relations):
-    if relations == 'entities':
+    if 'Entities' in relations:
         relations = entities
     entity1 = ''
     entity2 = ''
@@ -143,8 +143,9 @@ def build_sparql_query(pattern, entities, relations):
 
 
 # TODO: Check for return value from query after building ontology
-def get_answer(q, ret_type):
+def get_answer(q, ret_type, matching_pattern):
     res = list(q)
+    # print(res)
     if ret_type == "boolean":
         res = 'Yes' if len(res) > 0 and res[0] else 'No'
         return res
@@ -156,6 +157,9 @@ def get_answer(q, ret_type):
         for answer in res:
             answer = answer[0].split('/')[-1].replace('_', ' ')
             answer_list.append(answer)
+        if matching_pattern == 'What is the occupation of ([^\s].*[^\s])\?':
+            answer_list = [a.lower() for a in answer_list]
+        answer_list.sort()
         return ', '.join(answer_list)
 
 
@@ -165,25 +169,48 @@ def execute(query: str):
         print('please enter a valid query.')
         sys.exit(0)
     entities = extract_entities(matching_pattern, query)
+    # print(entities)
     relations = extract_relations(matching_pattern)
+    # print(relations)
     ret_type = extract_return_type(matching_pattern)
+    # print(ret_type)
     sparql_query = build_sparql_query(matching_pattern, entities, relations)
+    # print(sparql_query)
     q = g.query(sparql_query)
-    answer = get_answer(q, ret_type)
+    answer = get_answer(q, ret_type, matching_pattern)
     print(answer)
+    return str(answer)
 
 
 # execute("did Leonardo star in Titanic?")
 # execute("When was Nicolas Cage born?")
-execute("Who directed Bao (film)?")
-execute("Who produced 12 Years a Slave (film)?")
-execute("Is The Jungle Book (2016 film) based on a book?")
-execute("When was The Great Gatsby (2013 film) released?")
-execute("How long is Coco (2017 film)?")
-execute("Who starred in The Shape of Water?")
-execute("Did Octavia Spencer star in The Shape of Water?")
-execute("When was Chadwick Boseman born?")
-execute("What is the occupation of Emma Watson?")
-execute("How many films starring Meryl Streep won an academy award?")
-execute("Who produced Brave (2012 film)?")
-execute("Is Brave (2012 film) based on a book?")
+# execute("Who directed Bao (film)?")
+# execute("Who produced 12 Years a Slave (film)?")
+# execute("Is The Jungle Book (2016 film) based on a book?")
+# execute("When was The Great Gatsby (2013 film) released?")
+# execute("How long is Coco (2017 film)?")
+# execute("Who starred in The Shape of Water?")
+# execute("Did Octavia Spencer star in The Shape of Water?")
+# execute("When was Chadwick Boseman born?")
+# execute("What is the occupation of Emma Watson?")
+# execute("How many films starring Meryl Streep won an academy award?")
+# execute("Who produced Brave (2012 film)?")
+# execute("Is Brave (2012 film) based on a book?")
+# execute("How many films are based on books?")
+# execute("How many playwright are also theatre director?")
+
+with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
+                                                                              encoding='utf-8') as answers_file:
+    con = True
+    while con:
+        question = questions_file.readline()
+        if question != '':
+            question = question.rstrip()
+            expected_answer = answers_file.readline().rstrip()
+            actual_answer = execute(question)
+            try:
+                assert expected_answer == actual_answer, f'Question "{question}"\nreceived answer: "{actual_answer}"\ninstead of the expected answer: "{expected_answer}"'
+            except AssertionError as e:
+                print(f"**************** {e}")
+        else:
+            con = False

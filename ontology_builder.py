@@ -27,7 +27,7 @@ def create():
         for contributor in contributors_data:
             print("Contributor: %s" % contributor)
             insert_to_ontology(contributor, contributors_data[contributor])
-    g.serialize('ontology1.nt', format='nt')
+    g.serialize('ontology.nt', format='nt')
 
 
 def insert_to_ontology(entity, data):
@@ -83,7 +83,7 @@ def get_info_from_infobox(movie_url):
         data = parent.getchildren()[1]
         relations[label] = [a for a in data.itertext() if a != '\n' and '[' not in a]
         for i, text in enumerate(relations[label]):
-            el = get_element_by_text(data, text)
+            el = get_element_by_text(doc, text, label)
             for e in el:
                 if len(e.xpath("./@href")) > 0:
                     r = e.xpath("./@href")
@@ -104,11 +104,12 @@ def format_date(release_date):
     return dates
 
 
-def get_element_by_text(context, text):
+def get_element_by_text(context, text, label):
+    label = label.replace('_', ' ')
     text = text.replace('"', "%" + format(hex(ord('"'))))
     text = text.replace('{', "%" + format(hex(ord('{'))))
     text = text.replace('}', "%" + format(hex(ord('}'))))
-    s = f'//*[text()="{text}"]'
+    s = f'//table[contains(@class,"infobox")]//tr[position()>1 and .//*[text()="{label}"]]//*[text()="{text}"]'
     return context.xpath(s)
 
 

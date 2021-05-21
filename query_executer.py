@@ -147,9 +147,17 @@ def get_answer(q, ret_type):
     res = list(q)
     if ret_type == "boolean":
         res = 'Yes' if len(res) > 0 and res[0] else 'No'
+        return res
     elif ret_type == "int":
         res = len(res)
-    return res
+        return res
+    else:
+        answer_list = []
+        for answer in res:
+            answer = answer[0]
+            answer = answer.split('/')[-1]
+            answer_list.append(answer)
+        return answer_list
 
 
 def execute(query: str):
@@ -167,7 +175,7 @@ def execute(query: str):
 
 
 # execute("did Leonardo star in Titanic?")
-# execute("when was Nicolas Cage born?")
+# execute("When was Nicolas Cage born?")
 # execute("Who directed Bao (film)?")
 # execute("Who produced 12 Years a Slave (film)?")
 # execute("Is The Jungle Book (2016 film) based on a book?")
@@ -179,5 +187,5 @@ def execute(query: str):
 # execute("What is the occupation of Emma Watson?")
 # execute("How many films starring Meryl Streep won an academy award?")
 # execute("Who produced Brave (2012 film)?")
-execute("Is Brave (2012 film) based on a book?")
+# execute("Is Brave (2012 film) based on a book?")
 

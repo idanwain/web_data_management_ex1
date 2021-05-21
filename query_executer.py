@@ -145,7 +145,7 @@ def build_sparql_query(pattern, entities, relations):
 # TODO: Check for return value from query after building ontology
 def get_answer(q, ret_type, matching_pattern):
     res = list(q)
-    # print(res)
+    print(res)
     if ret_type == "boolean":
         res = 'Yes' if len(res) > 0 and res[0] else 'No'
         return res
@@ -169,13 +169,13 @@ def execute(query: str):
         print('please enter a valid query.')
         sys.exit(0)
     entities = extract_entities(matching_pattern, query)
-    # print(entities)
+    print(entities)
     relations = extract_relations(matching_pattern)
-    # print(relations)
+    print(relations)
     ret_type = extract_return_type(matching_pattern)
-    # print(ret_type)
+    print(ret_type)
     sparql_query = build_sparql_query(matching_pattern, entities, relations)
-    # print(sparql_query)
+    print(sparql_query)
     q = g.query(sparql_query)
     answer = get_answer(q, ret_type, matching_pattern)
     print(answer)
@@ -197,20 +197,20 @@ def execute(query: str):
 # execute("Who produced Brave (2012 film)?")
 # execute("Is Brave (2012 film) based on a book?")
 # execute("How many films are based on books?")
-# execute("How many playwright are also theatre director?")
+execute("How many actor are also film director?")
 
-with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
-                                                                              encoding='utf-8') as answers_file:
-    con = True
-    while con:
-        question = questions_file.readline()
-        if question != '':
-            question = question.rstrip()
-            expected_answer = answers_file.readline().rstrip()
-            actual_answer = execute(question)
-            try:
-                assert expected_answer == actual_answer, f'Question "{question}"\nreceived answer: "{actual_answer}"\ninstead of the expected answer: "{expected_answer}"'
-            except AssertionError as e:
-                print(f"**************** {e}")
-        else:
-            con = False
+# with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
+#                                                                               encoding='utf-8') as answers_file:
+#     con = True
+#     while con:
+#         question = questions_file.readline()
+#         if question != '':
+#             question = question.rstrip()
+#             expected_answer = answers_file.readline().rstrip()
+#             actual_answer = execute(question)
+#             try:
+#                 assert expected_answer == actual_answer, f'Question "{question}"\nreceived answer: "{actual_answer}"\ninstead of the expected answer: "{expected_answer}"'
+#             except AssertionError as e:
+#                 print(f"**************** {e}")
+#         else:
+#             con = False

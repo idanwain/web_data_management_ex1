@@ -53,6 +53,8 @@ def insert_to_ontology(entity, data):
             value = value.replace('{', "%" + format(hex(ord('{'))))
             value = value.replace('}', "%" + format(hex(ord('}'))))
             value = value.replace('\\', "%" + format(hex(ord('\\'))))
+            if relation == 'Occupation':
+                value = value.lower()
             ont_value = rdflib.URIRef(example_url + '/' + value)
             g.add((ont_entity, ont_relation, ont_value))
 

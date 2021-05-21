@@ -27,7 +27,7 @@ def create():
         for contributor in contributors_data:
             print("Contributor: %s" % contributor)
             insert_to_ontology(contributor, contributors_data[contributor])
-    g.serialize('ontology.nt', format='nt')
+    g.serialize('ontology1.nt', format='nt')
 
 
 def insert_to_ontology(entity, data):
@@ -80,7 +80,14 @@ def get_info_from_infobox(movie_url):
         label = ' '.join(t.itertext()).strip(' ')
         label = label.replace(' ', '_')
         parent = t.getparent()
-        relations[label] = [a for a in parent.getchildren()[1].itertext() if a != '\n' and '[' not in a]
+        data = parent.getchildren()[1]
+        relations[label] = [a for a in data.itertext() if a != '\n' and '[' not in a]
+        for i, text in enumerate(relations[label]):
+            el = get_element_by_text(data, text)
+            for e in el:
+                if len(e.xpath("./@href")) > 0:
+                    r = e.xpath("./@href")
+                    relations[label][i] = truncate_prefix(r[0])
         if label == 'Release_date':
             relations['Release_date'] = format_date(relations['Release_date'])
     return relations
@@ -95,6 +102,20 @@ def format_date(release_date):
         except ValueError:
             pass
     return dates
+
+
+def get_element_by_text(context, text):
+    text = text.replace('"', "%" + format(hex(ord('"'))))
+    text = text.replace('{', "%" + format(hex(ord('{'))))
+    text = text.replace('}', "%" + format(hex(ord('}'))))
+    s = f'//*[text()="{text}"]'
+    return context.xpath(s)
+
+
+def truncate_prefix(text, prefix='/wiki/'):
+    if text.startswith(prefix):
+        return text[len(prefix):]
+    return text
 
 
 def get_contributors_info(data: dict):

@@ -7,7 +7,6 @@ g = rdflib.Graph()
 g.parse("ontology.nt", format="nt")
 example_url = "<http://example.org/"
 
-
 queries = {
     'Who directed ([^\s].*[^\s])\?': 'select ?x where {{'
                                      '{entity1} {relation1} ?x .'
@@ -25,8 +24,8 @@ queries = {
                                     '{entity1} {relation1} ?x .'
                                     '}}',
     'Who starred in ([^\s].*[^\s])\?': 'select ?x where {{'
-                                        '{entity1} {relation1} ?x .'
-                                        '}}',
+                                       '{entity1} {relation1} ?x .'
+                                       '}}',
     'Did ([^\s].*[^\s]) star in ([^\s].*[^\s])\?': 'ask where {{'
                                                    '{entity2} {relation1} {entity1} .'
                                                    '}}',
@@ -35,7 +34,7 @@ queries = {
                                       '}}',
     'What is the occupation of ([^\s].*[^\s])\?': 'select ?x where {{'
                                                   '{entity1} {relation1} ?x .'
-                                                   '}}',
+                                                  '}}',
     'How many films are based on books\?': 'select distinct * where {{'
                                            '?film {relation1} ?book .'
                                            '}}',
@@ -139,7 +138,8 @@ def build_sparql_query(pattern, entities, relations):
     relation1 = replace_spaces(relation1)
     relation2 = replace_spaces(relation2)
 
-    return queries[pattern].format(entity1=example_url + entity1 + ">", entity2=example_url + entity2 + ">", relation1=example_url + relation1 + ">", relation2=example_url + relation2 + ">")
+    return queries[pattern].format(entity1=example_url + entity1 + ">", entity2=example_url + entity2 + ">",
+                                   relation1=example_url + relation1 + ">", relation2=example_url + relation2 + ">")
 
 
 # TODO: Check for return value from query after building ontology
@@ -154,10 +154,9 @@ def get_answer(q, ret_type):
     else:
         answer_list = []
         for answer in res:
-            answer = answer[0]
-            answer = answer.split('/')[-1]
+            answer = answer[0].split('/')[-1].replace('_', ' ')
             answer_list.append(answer)
-        return answer_list
+        return ', '.join(answer_list)
 
 
 def execute(query: str):
@@ -176,16 +175,15 @@ def execute(query: str):
 
 # execute("did Leonardo star in Titanic?")
 # execute("When was Nicolas Cage born?")
-# execute("Who directed Bao (film)?")
-# execute("Who produced 12 Years a Slave (film)?")
-# execute("Is The Jungle Book (2016 film) based on a book?")
-# execute("When was The Great Gatsby (2013 film) released?")
-# execute("How long is Coco (2017 film)?")
-# execute("Who starred in The Shape of Water?")
-# execute("Did Octavia Spencer star in The Shape of Water?")
-# execute("When was Chadwick Boseman born?")
-# execute("What is the occupation of Emma Watson?")
-# execute("How many films starring Meryl Streep won an academy award?")
-# execute("Who produced Brave (2012 film)?")
-# execute("Is Brave (2012 film) based on a book?")
-
+execute("Who directed Bao (film)?")
+execute("Who produced 12 Years a Slave (film)?")
+execute("Is The Jungle Book (2016 film) based on a book?")
+execute("When was The Great Gatsby (2013 film) released?")
+execute("How long is Coco (2017 film)?")
+execute("Who starred in The Shape of Water?")
+execute("Did Octavia Spencer star in The Shape of Water?")
+execute("When was Chadwick Boseman born?")
+execute("What is the occupation of Emma Watson?")
+execute("How many films starring Meryl Streep won an academy award?")
+execute("Who produced Brave (2012 film)?")
+execute("Is Brave (2012 film) based on a book?")

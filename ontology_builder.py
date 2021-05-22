@@ -9,7 +9,7 @@ import re
 wiki_url = "https://en.wikipedia.org"
 example_url = "http://example.org"
 suffix = "?redirect=no"
-redirection_needed = ['https://en.wikipedia.org/wiki/La_La_Land']
+redirection_needed = ['https://en.wikipedia.org/wiki/La_La_Land_(film)']
 cleaner = lxml.html.clean.Cleaner(style=True)
 g = rdflib.Graph()
 
@@ -21,8 +21,6 @@ def create():
     movies_urls = get_movies_urls()
     for movie in movies_urls:
         movie_name = get_movie_name(movie)
-        if movie == 'https://en.wikipedia.org/wiki/La_La_Land':
-            movie_name += '_(film)'
         print("Movie: %s" % movie_name)
         movie_data = get_info_from_infobox(movie)
         contributors_data = get_contributors_info(movie_data)

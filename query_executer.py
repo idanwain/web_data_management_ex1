@@ -151,7 +151,7 @@ def build_sparql_query(pattern, entities, relations):
 # TODO: Check for return value from query after building ontology
 def get_answer(q, ret_type, matching_pattern):
     res = list(q)
-    print(res)
+    # print(res)
     if ret_type == "boolean":
         res = 'Yes' if len(res) > 0 and res[0] else 'No'
         return res
@@ -184,7 +184,7 @@ def execute(query: str):
     # print(sparql_query)
     q = g.query(sparql_query)
     answer = get_answer(q, ret_type, matching_pattern)
-    print(answer)
+    # print(answer)
     return str(answer)
 
 

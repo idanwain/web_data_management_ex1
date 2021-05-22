@@ -9,7 +9,7 @@ import re
 wiki_url = "https://en.wikipedia.org"
 example_url = "http://example.org"
 suffix = "?redirect=no"
-redirection_needed = ['https://en.wikipedia.org/wiki/La_La_Land_(film)']
+redirection_needed = ['https://en.wikipedia.org/wiki/La_La_Land_(film)', 'https://en.wikipedia.org/wiki/Boyhood_(film)']
 cleaner = lxml.html.clean.Cleaner(style=True)
 g = rdflib.Graph()
 

@@ -6,6 +6,7 @@ import rdflib
 g = rdflib.Graph()
 g.parse("ontology.nt", format="nt")
 example_url = "<http://example.org/"
+invalid_chars = [',', ':']
 
 queries = {
     'Who directed ([^\s].*[^\s])\?': 'select ?x where {{'
@@ -162,9 +163,12 @@ def get_answer(q, ret_type, matching_pattern):
         answer_list = []
         for answer in res:
             answer = answer[0].split('/')[-1].replace('_', ' ')
-            answer_list.append(answer)
+            if answer and answer not in invalid_chars:
+                answer_list.append(answer)
         if matching_pattern == 'What is the occupation of ([^\s].*[^\s])\?':
-            answer_list = [a.lower() for a in answer_list]
+            answer_list = [a.lower().strip(',').strip() for a in answer_list]
+            if len(answer_list) > 0 and ',' in answer_list[0]:
+                answer_list = answer_list[0].split(', ')
         answer_list.sort()
         return ', '.join(answer_list)
 
@@ -206,7 +210,8 @@ def execute(query: str):
 # execute("How many actor are also film director?")
 # execute("What is the occupation of Florian Zeller?")
 # execute("Does Thomas Bo Larsen have children?")
-
+# execute("What is the occupation of Darius Marder?")
+#
 with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
                                                                               encoding='utf-8') as answers_file:
     con = True

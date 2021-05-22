@@ -5,6 +5,7 @@ import rdflib
 import rdflib.term
 import lxml.html.clean
 import json
+import re
 
 wiki_url = "https://en.wikipedia.org"
 example_url = "http://example.org"
@@ -91,11 +92,11 @@ def get_info_from_infobox(movie_url):
                     r = e.xpath("./@href")
                     relations[label][i] = truncate_prefix(r[0])
         if label == 'Release_date':
-            relations['Release_date'] = format_date(relations['Release_date'])
+            relations['Release_date'] = format_date(relations['Release_date'],'Release_date')
     return relations
 
 
-def format_date(release_date):
+def format_date(release_date,key=None):
     dates = []
     for date in release_date:
         try:
@@ -103,6 +104,11 @@ def format_date(release_date):
             dates.append(date)
         except ValueError:
             pass
+    if(len(dates) == 0 and key=='Born'):
+        p = re.compile("[0-9]{4}")
+        for data in release_date:
+            if len(p.findall(data)) > 0:
+                return [p.findall(data)[0]]
     return dates
 
 
@@ -135,7 +141,7 @@ def get_contributors_info(data: dict):
         info = get_info_from_infobox(wiki_url + '/wiki/' + people)
         if len(info) > 0:
             try:
-                info['Born'] = format_date(info['Born'])
+                info['Born'] = format_date(info['Born'],'Born')
                 res[people] = info
             except KeyError:
                 print(people + " has no 'born' field, skipping.")

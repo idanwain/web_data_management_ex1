@@ -4,7 +4,7 @@ import rdflib
 
 # Ontology Graph
 g = rdflib.Graph()
-g.parse("ontology1.nt", format="nt")
+g.parse("ontology.nt", format="nt")
 example_url = "<http://example.org/"
 
 queries = {
@@ -44,7 +44,10 @@ queries = {
     'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'select ?x where {{'
                                                          ' ?x <http://example.org/Occupation> {relation1} .'
                                                          ' ?x <http://example.org/Occupation> {relation2} .'
-                                                         '}}'
+                                                         '}}',
+    'Does ([^\s].*[^\s]) have children\?': 'select ?x where {{'
+                                           '{entity1} {relation1} ?x .'
+                                           '}}'
 }
 
 patterns = [
@@ -59,7 +62,8 @@ patterns = [
     'What is the occupation of ([^\s].*[^\s])\?',
     'How many films are based on books\?',
     'How many films starring ([^\s].*[^\s]) won an academy award\?',
-    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?'
+    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?',
+    'Does ([^\s].*[^\s]) have children\?'
 ]
 
 relations = {
@@ -74,7 +78,8 @@ relations = {
     'What is the occupation of ([^\s].*[^\s])\?': 'Occupation',
     'How many films are based on books\?': 'Based_on',
     'How many films starring ([^\s].*[^\s]) won an academy award\?': 'Starring',
-    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'Entities'
+    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'Entities',
+    'Does ([^\s].*[^\s]) have children\?': 'Children'
 }
 
 pattern_type_mapping = {
@@ -83,7 +88,8 @@ pattern_type_mapping = {
     "When": "date",
     "How": "int",
     "What": "string",
-    "Did": "boolean"
+    "Did": "boolean",
+    "Does": "boolean"
 }
 
 
@@ -199,7 +205,8 @@ def execute(query: str):
 # execute("How many films are based on books?")
 # execute("How many actor are also film director?")
 # execute("What is the occupation of Florian Zeller?")
-#
+# execute("Does Thomas Bo Larsen have children?")
+
 with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
                                                                               encoding='utf-8') as answers_file:
     con = True

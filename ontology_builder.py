@@ -4,7 +4,6 @@ import datetime
 import rdflib
 import rdflib.term
 import lxml.html.clean
-import json
 import re
 
 wiki_url = "https://en.wikipedia.org"
@@ -81,7 +80,7 @@ def get_movies_urls(url="https://en.wikipedia.org/wiki/List_of_Academy_Award-win
 def get_info_from_infobox(movie_url):
     res = requests.get(movie_url + suffix)
     if movie_url in redirection_needed:
-        res = requests.get(movie_url + suffix)
+        res = requests.get(movie_url)
     doc = lxml.html.fromstring(res.content)
     relations = dict()
     for t in doc.xpath(

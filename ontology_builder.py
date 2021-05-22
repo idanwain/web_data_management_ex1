@@ -30,31 +30,29 @@ def create():
             insert_to_ontology(contributor, contributors_data[contributor])
     g.serialize('ontology.nt', format='nt')
 
+def clean_string(value):
+    value = value.strip()
+    value = value.replace('\xa0', '_')
+    value = value.replace(' ', '_')
+    value = value.replace('"', "%" + format(hex(ord('"'))))
+    value = value.replace('{', "%" + format(hex(ord('{'))))
+    value = value.replace('}', "%" + format(hex(ord('}'))))
+    value = value.replace('\\', "%" + format(hex(ord('\\'))))
+    value = value.replace('\n', '')
+    value = value.encode("ascii", "ignore")
+    value = value.decode()
+    return value
+
+
 
 def insert_to_ontology(entity, data):
-    entity = entity.strip()
-    entity = entity.replace('"', "%" + format(hex(ord('"'))))
-    entity = entity.replace('{', "%" + format(hex(ord('{'))))
-    entity = entity.replace('}', "%" + format(hex(ord('}'))))
-    entity = entity.replace('\\', "%" + format(hex(ord('\\'))))
+    entity = clean_string(entity)
     ont_entity = rdflib.URIRef(example_url + '/' + entity)
     for relation in data:
-        relation = relation.strip()
-        ont_relation = relation.replace('\xa0', '_')
-        ont_relation = ont_relation.replace('"', "%" + format(hex(ord('"'))))
-        ont_relation = ont_relation.replace('{', "%" + format(hex(ord('{'))))
-        ont_relation = ont_relation.replace('}', "%" + format(hex(ord('}'))))
-        ont_relation = ont_relation.replace('\\', "%" + format(hex(ord('\\'))))
+        ont_relation = clean_string(relation)
         ont_relation = rdflib.URIRef(example_url + '/' + ont_relation)
         for value in data[relation]:
-            value = value.strip()
-            value = value.replace('\xa0', '_')
-            value = value.replace(' ', '_')
-            value = value.replace('"', "%" + format(hex(ord('"'))))
-            value = value.replace('{', "%" + format(hex(ord('{'))))
-            value = value.replace('}', "%" + format(hex(ord('}'))))
-            value = value.replace('\\', "%" + format(hex(ord('\\'))))
-            value = value.replace('\n','')
+            value = clean_string(value)
             if relation == 'Occupation':
                 value = value.lower()
             ont_value = rdflib.URIRef(example_url + '/' + value)

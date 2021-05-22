@@ -28,7 +28,7 @@ def create():
         for contributor in contributors_data:
             print("Contributor: %s" % contributor)
             insert_to_ontology(contributor, contributors_data[contributor])
-    g.serialize('ontology.nt', format='nt')
+    g.serialize('ontology1.nt', format='nt')
 
 def clean_string(value):
     value = value.strip()
@@ -39,12 +39,18 @@ def clean_string(value):
     value = value.replace('}', "%" + format(hex(ord('}'))))
     value = value.replace('\\', "%" + format(hex(ord('\\'))))
     value = value.replace('\n', '')
-    value = value.encode("ascii", "ignore")
-    value = value.decode()
     return value
 
-
-
+def clean_occupation(value):
+    ret_vals = []
+    value = value.split(',')
+    if(len(value) == 1):
+        return value
+    for data in value:
+        if(len(data) > 0):
+            data = data.strip('_')
+            ret_vals.append(data)
+    return ret_vals
 def insert_to_ontology(entity, data):
     entity = clean_string(entity)
     ont_entity = rdflib.URIRef(example_url + '/' + entity)
@@ -55,8 +61,12 @@ def insert_to_ontology(entity, data):
             value = clean_string(value)
             if relation == 'Occupation':
                 value = value.lower()
-            ont_value = rdflib.URIRef(example_url + '/' + value)
-            g.add((ont_entity, ont_relation, ont_value))
+                value = clean_occupation(value)
+            else:
+                value = [value]
+            for val in value:
+                ont_value = rdflib.URIRef(example_url + '/' + val)
+                g.add((ont_entity, ont_relation, ont_value))
 
 
 def get_movie_name(movie_url):

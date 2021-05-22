@@ -198,20 +198,20 @@ def execute(query: str):
 # execute("Is Brave (2012 film) based on a book?")
 # execute("How many films are based on books?")
 # execute("How many actor are also film director?")
-execute("What is the occupation of Florian Zeller?")
-
-# with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
-#                                                                               encoding='utf-8') as answers_file:
-#     con = True
-#     while con:
-#         question = questions_file.readline()
-#         if question != '':
-#             question = question.rstrip()
-#             expected_answer = answers_file.readline().rstrip()
-#             actual_answer = execute(question)
-#             try:
-#                 assert expected_answer == actual_answer, f'Question "{question}"\nreceived answer: "{actual_answer}"\ninstead of the expected answer: "{expected_answer}"'
-#             except AssertionError as e:
-#                 print(f"**************** {e}")
-#         else:
-#             con = False
+# execute("What is the occupation of Florian Zeller?")
+#
+with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
+                                                                              encoding='utf-8') as answers_file:
+    con = True
+    while con:
+        question = questions_file.readline()
+        if question != '':
+            question = question.rstrip()
+            expected_answer = answers_file.readline().rstrip()
+            actual_answer = execute(question)
+            try:
+                assert expected_answer == actual_answer, f'Question "{question}"\nreceived answer: "{actual_answer}"\ninstead of the expected answer: "{expected_answer}"'
+            except AssertionError as e:
+                print(f"**************** {e}")
+        else:
+            con = False

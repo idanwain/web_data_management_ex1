@@ -28,7 +28,7 @@ def create():
         for contributor in contributors_data:
             print("Contributor: %s" % contributor)
             insert_to_ontology(contributor, contributors_data[contributor])
-    g.serialize('ontology1.nt', format='nt')
+    g.serialize('ontology.nt', format='nt')
 
 def clean_string(value):
     value = value.strip()

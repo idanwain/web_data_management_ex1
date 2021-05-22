@@ -188,6 +188,8 @@ def execute(query: str):
     # print(sparql_query)
     q = g.query(sparql_query)
     answer = get_answer(q, ret_type, matching_pattern)
+    answer = answer.encode("ascii", "ignore")
+    answer = answer.decode()
     # print(answer)
     return str(answer)
 

@@ -193,19 +193,3 @@ def execute(query: str):
         answer = answer.decode()
     print(answer)
     return str(answer)
-
-# with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
-#                                                                               encoding='utf-8') as answers_file:
-#     con = True
-#     while con:
-#         question = questions_file.readline()
-#         if question != '':
-#             question = question.rstrip()
-#             expected_answer = answers_file.readline().rstrip()
-#             actual_answer = execute(question)
-#             try:
-#                 assert expected_answer == actual_answer, f'Question "{question}"\nreceived answer: "{actual_answer}"\ninstead of the expected answer: "{expected_answer}"'
-#             except AssertionError as e:
-#                 print(f"**************** {e}")
-#         else:
-#             con = False

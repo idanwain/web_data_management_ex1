@@ -17,16 +17,16 @@ g = rdflib.Graph()
 # TODO: Handle lower-case upper-case problem
 def create():
     ### add info of movie and info of contributers to ontology ###
-    print("Start to create nt:")
+    # print("Start to create nt:")
     movies_urls = get_movies_urls()
     for movie in movies_urls:
         movie_name = get_movie_name(movie)
-        print("Movie: %s" % movie_name)
+        # print("Movie: %s" % movie_name)
         movie_data = get_info_from_infobox(movie)
         contributors_data = get_contributors_info(movie_data)
         insert_to_ontology(movie_name, movie_data)
         for contributor in contributors_data:
-            print("Contributor: %s" % contributor)
+            # print("Contributor: %s" % contributor)
             insert_to_ontology(contributor, contributors_data[contributor])
     g.serialize('ontology.nt', format='nt')
 
@@ -159,4 +159,4 @@ def get_contributors_info(data: dict):
     return res
 
 
-create()
+# create()

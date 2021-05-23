@@ -42,7 +42,7 @@ queries = {
     'How many films starring ([^\s].*[^\s]) won an academy award\?': 'select ?x where {{'
                                                                      '?x {relation1} {entity1} .'
                                                                      '}}',
-    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'select ?x where {{'
+    'How many ([^\s].*[^\s]) are also ([^\s].*[^\s])\?': 'select distinct ?x where {{'
                                                          ' ?x <http://example.org/Occupation> {relation1} .'
                                                          ' ?x <http://example.org/Occupation> {relation2} .'
                                                          '}}',
@@ -188,44 +188,24 @@ def execute(query: str):
     # print(sparql_query)
     q = g.query(sparql_query)
     answer = get_answer(q, ret_type, matching_pattern)
-    answer = answer.encode("ascii", "ignore")
-    answer = answer.decode()
-    # print(answer)
+    if type(answer) == str:
+        answer = answer.encode("ascii", "ignore")
+        answer = answer.decode()
+    print(answer)
     return str(answer)
 
-
-# execute("did Leonardo star in Titanic?")
-# execute("When was Nicolas Cage born?")
-# execute("Who directed Bao (film)?")
-# execute("Who produced 12 Years a Slave (film)?")
-# execute("Is The Jungle Book (2016 film) based on a book?")
-# execute("When was The Great Gatsby (2013 film) released?")
-# execute("How long is Coco (2017 film)?")
-# execute("Who starred in The Shape of Water?")
-# execute("Did Octavia Spencer star in The Shape of Water?")
-# execute("When was Chadwick Boseman born?")
-# execute("What is the occupation of Emma Watson?")
-# execute("How many films starring Meryl Streep won an academy award?")
-# execute("Who produced Brave (2012 film)?")
-# execute("Is Brave (2012 film) based on a book?")
-# execute("How many films are based on books?")
-# execute("How many actor are also film director?")
-# execute("What is the occupation of Florian Zeller?")
-# execute("Does Thomas Bo Larsen have children?")
-# execute("What is the occupation of Darius Marder?")
-#
-with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
-                                                                              encoding='utf-8') as answers_file:
-    con = True
-    while con:
-        question = questions_file.readline()
-        if question != '':
-            question = question.rstrip()
-            expected_answer = answers_file.readline().rstrip()
-            actual_answer = execute(question)
-            try:
-                assert expected_answer == actual_answer, f'Question "{question}"\nreceived answer: "{actual_answer}"\ninstead of the expected answer: "{expected_answer}"'
-            except AssertionError as e:
-                print(f"**************** {e}")
-        else:
-            con = False
+# with open('./questions_test.txt', 'r', encoding='utf-8') as questions_file, open('./answers_test.txt', 'r',
+#                                                                               encoding='utf-8') as answers_file:
+#     con = True
+#     while con:
+#         question = questions_file.readline()
+#         if question != '':
+#             question = question.rstrip()
+#             expected_answer = answers_file.readline().rstrip()
+#             actual_answer = execute(question)
+#             try:
+#                 assert expected_answer == actual_answer, f'Question "{question}"\nreceived answer: "{actual_answer}"\ninstead of the expected answer: "{expected_answer}"'
+#             except AssertionError as e:
+#                 print(f"**************** {e}")
+#         else:
+#             con = False

@@ -193,3 +193,6 @@ def execute(query: str):
         answer = answer.decode()
     print(answer)
     return str(answer)
+
+
+# execute("What is the occupation of Peyman Moaadi?")

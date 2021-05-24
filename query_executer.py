@@ -194,5 +194,3 @@ def execute(query: str):
     print(answer)
     return str(answer)
 
-
-# execute("What is the occupation of Peyman Moaadi?")
